@@ -3,9 +3,5 @@ compiler:
   - clang
 
 script:
-  - if [ ! -d build ]; then
-  -   mkdir build
-  - fi
-  - cd build
-  - cmake ../ -DCOVERAGE=TRUE
+  - cmake -DCOVERAGE=TRUE
   - make "$@"
