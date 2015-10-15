@@ -5,6 +5,10 @@ option(BUILD_TESTS "Build tests" OFF)
 
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=gnu++11" )
 
+if ( ${COVERAGE} )
+    set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -O0" )
+endif ( ${COVERAGE})
+
 
 # OS Detection
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -27,4 +31,5 @@ if ( BUILD_TESTS )
     include_directories ( ${SIMPLEX_TEST_INCLUDES} )
     add_executable ( tests ${TEST_CODE} )
     target_link_libraries ( tests ${SIMPLEX_TEST_LIBRARIES} )
+    add_test ( simplex-framework-tests tests )
 endif ( BUILD_TESTS )
