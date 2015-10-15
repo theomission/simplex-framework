@@ -3,6 +3,10 @@ compiler:
   - clang
 
 script:
-  - cmake -DCOVERAGE=TRUE
+  - cmake -DCOVERAGE=TRUE -DBUILD_TESTS=TRUE
   - make "$@"
   - ./tests
+
+notifications:
+  email:
+    - info@franciscotufro.com
