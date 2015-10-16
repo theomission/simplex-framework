@@ -6,8 +6,12 @@ before_install:
   - pip install --user cpp-coveralls
 
 script:
-  - cmake -DCOVERAGE=TRUE -DBUILD_TESTS=TRUE
+  - mkdir build
+  - cd build
+  - cmake ../ -DCOVERAGE=TRUE -DBUILD_TESTS=TRUE
   - make "$@"
+  - cd ..
+  - cd build
   - ./tests
 
 after_success:
