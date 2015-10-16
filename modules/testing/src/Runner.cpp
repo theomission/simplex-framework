@@ -4,14 +4,27 @@ namespace Simplex
 {
   namespace Testing
   {
-    Runner::Runner (int argc, char **argv)
+
+    void Runner::SetArguments (int argc, char **argv)
     {
-      testing::InitGoogleTest(&argc, argv);
+      mArgc = argc;
+      mArgv = argv;
     }
 
-    int Runner::Start ()
+    void Runner::Startup ()
     {
-      return RUN_ALL_TESTS();
+      testing::InitGoogleTest(&mArgc, mArgv);
     }
+
+    void Runner::Run ()
+    {
+      mResult = RUN_ALL_TESTS();
+    }
+
+    int Runner::GetTestResult()
+    {
+      return mResult;
+    }
+
   }
 }

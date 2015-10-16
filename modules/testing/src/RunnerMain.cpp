@@ -6,12 +6,13 @@ using namespace Simplex::Support;
 
 int main ( int argc, char **argv )
 {
-    // Allocate 100MB and send it to the heap
-    StackAllocator* allocator = new StackAllocator(100 * 1024 * 1024);
+    Simplex::Testing::Runner testRunner;
 
-    // Set Allocator as default allocator
-    Globals.allocator = (Allocator*)allocator;
+    testRunner.SetArguments(argc, argv);
 
-    Simplex::Testing::Runner testRunner = Simplex::Testing::Runner ( argc, argv );
-    return testRunner.Start ();
+    testRunner.Startup();
+    testRunner.Run();
+    testRunner.Shutdown();
+
+    return testRunner.GetTestResult();
 }
