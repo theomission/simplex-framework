@@ -15,9 +15,3 @@ namespace Simplex
     }
   }
 }
-
-int main ( int argc, char **argv )
-{
-  Simplex::Testing::Runner testRunner = Simplex::Testing::Runner ( argc, argv );
-  return testRunner.Start ();
-}
