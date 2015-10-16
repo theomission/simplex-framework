@@ -17,7 +17,7 @@ namespace Simplex
 
         StackAllocator::~StackAllocator()
         {
-            delete mPool;
+            delete[] mPool;
         }
 
         void* StackAllocator::Allocate(U32 size, U32 align)

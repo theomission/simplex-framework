@@ -15,6 +15,7 @@ TEST ( SimplexCoreAdapter, AcceptsAnAdaptee )
 
   adapter.SetAdaptee( adaptee );
   ASSERT_EQ ( adaptee, adapter.GetAdaptee() );
+  delete adaptee;
 }
 
 TEST ( SimplexCoreAdapter, HasAdapteeReturnsFalseIfNoAdapteeSet )
@@ -31,6 +32,7 @@ TEST ( SimplexCoreAdapter, HasAdapteeReturnsTrueIfAdapteeSet )
   adapter.SetAdaptee( adaptee );
 
   ASSERT_TRUE ( adapter.HasAdaptee() );
+  delete adaptee;
 }
 
 //TODO: TEST ALL BAD CASES WITH EXCEPTIONS AND ALL

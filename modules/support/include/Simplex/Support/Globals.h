@@ -2,12 +2,23 @@
 #define SIMPLEX_SUPPORT_GLOBALS_H
 
 #include <Simplex/Support/Allocator.h>
-
-struct GlobalsStruct
+namespace Simplex
 {
-    Simplex::Support::Allocator* allocator;
-};
+    namespace Support
+    {
+        class Globals
+        {
+        public:
+            static Globals* Instance();
 
-GlobalsStruct Globals;
+            Simplex::Support::Allocator* allocator = 0;
+
+        private:
+            Globals() {};
+
+            static Globals* mInstance;
+        };
+    }
+}
 
 #endif

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(simplex-support)
 
-add_subdirectory( "third-party/SDL2" )
+# add_subdirectory( "third-party/SDL2" )
 
 set ( INCLUDES
   ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SDL2/include/
@@ -9,7 +9,7 @@ set ( INCLUDES
 )
 
 set ( SIMPLEX_FRAMEWORK_INCLUDES ${SIMPLEX_FRAMEWORK_INCLUDES} ${INCLUDES} CACHE INTERNAL "simplex-framework-includes")
-set ( SIMPLEX_FRAMEWORK_LIBRARIES ${SIMPLEX_FRAMEWORK_LIBRARIES} simplex-support  SDL2 CACHE INTERNAL "simplex-framework-libraries")
+set ( SIMPLEX_FRAMEWORK_LIBRARIES ${SIMPLEX_FRAMEWORK_LIBRARIES} simplex-support  CACHE INTERNAL "simplex-framework-libraries")
 
 include_directories ( ${INCLUDES} )
 
