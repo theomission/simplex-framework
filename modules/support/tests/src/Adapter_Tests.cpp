@@ -8,7 +8,7 @@ class AdapteeMock : public Simplex::Support::Adaptee
 {
 };
 
-TEST ( SimplexCoreAdapter, AcceptsAnAdaptee )
+TEST ( SimplexSupportAdapter, AcceptsAnAdaptee )
 {
   AdapteeMock* adaptee = new AdapteeMock();
   Adapter adapter = Adapter();
@@ -18,13 +18,13 @@ TEST ( SimplexCoreAdapter, AcceptsAnAdaptee )
   delete adaptee;
 }
 
-TEST ( SimplexCoreAdapter, HasAdapteeReturnsFalseIfNoAdapteeSet )
+TEST ( SimplexSupportAdapter, HasAdapteeReturnsFalseIfNoAdapteeSet )
 {
   Adapter adapter = Adapter();
   ASSERT_FALSE ( adapter.HasAdaptee() );
 }
 
-TEST ( SimplexCoreAdapter, HasAdapteeReturnsTrueIfAdapteeSet )
+TEST ( SimplexSupportAdapter, HasAdapteeReturnsTrueIfAdapteeSet )
 {
   AdapteeMock* adaptee = new AdapteeMock();
   Adapter adapter = Adapter();
@@ -34,5 +34,3 @@ TEST ( SimplexCoreAdapter, HasAdapteeReturnsTrueIfAdapteeSet )
   ASSERT_TRUE ( adapter.HasAdaptee() );
   delete adaptee;
 }
-
-//TODO: TEST ALL BAD CASES WITH EXCEPTIONS AND ALL

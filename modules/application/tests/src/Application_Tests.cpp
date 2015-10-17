@@ -10,7 +10,30 @@ TEST ( SimplexApplication, StartupConfiguresMemory )
   a.AllocateMemory(100);
   a.Startup();
 
-  Globals* globals = Simplex::Support::Globals::Instance();
+  Support::Globals* globals = Simplex::Support::Globals::Instance();
 
-  EXPECT_GT( globals->allocator->TotalReserved(), 10);
+  EXPECT_GT( globals->Allocator->TotalReserved(), 10);
+  a.Shutdown();
+}
+
+TEST ( SimplexApplication, StartupInitializesGraphics )
+{
+  Application a;
+
+  a.AllocateMemory(100);
+  a.Startup();
+
+  EXPECT_EQ( Graphics::Subsystem::Instance()->Initialized, true );
+  a.Shutdown();
+}
+
+TEST ( SimplexApplication, StartupInitializesEditor )
+{
+  Application a;
+
+  a.AllocateMemory(100);
+  a.Startup();
+
+  EXPECT_EQ( Editor::Subsystem::Instance()->Initialized, true );
+  a.Shutdown();
 }

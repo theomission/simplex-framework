@@ -11,7 +11,8 @@ namespace Simplex
         public:
             static Globals* Instance();
 
-            Simplex::Support::Allocator* allocator = 0;
+            bool ShouldShutdown = false;
+            Simplex::Support::Allocator* Allocator = 0;
 
         private:
             Globals() {};

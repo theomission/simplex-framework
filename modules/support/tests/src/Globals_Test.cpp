@@ -3,7 +3,12 @@
 
 using namespace Simplex::Support;
 
-TEST ( SimplexCoreAdapter, IsASingleton )
+TEST ( SimplexGlobals, IsASingleton )
 {
     EXPECT_TRUE ( Globals::Instance() != NULL );
+}
+
+TEST ( SimplexGlobals, ContainsBoolCalledShouldShutdown )
+{
+    EXPECT_EQ ( Globals::Instance()->ShouldShutdown, false );
 }

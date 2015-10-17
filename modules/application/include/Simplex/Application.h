@@ -3,8 +3,10 @@
 
 #include <Simplex/Support/Allocator.h>
 #include <Simplex/Support/Globals.h>
+#include <Simplex/Graphics.h>
+#include <Simplex/Editor.h>
 
-using namespace Simplex::Support;
+using namespace Simplex;
 
 namespace Simplex
 {
@@ -15,11 +17,18 @@ namespace Simplex
         virtual void Startup();
         virtual void Run();
         virtual void Shutdown();
+
+    protected:
+        virtual void FrameStep() {};
+
     private:
 
         U32 mMemoryToAllocate = 1000 * 1024 * 1024; // Defaults to 1GB
-        Allocator* mDefaultAllocator = 0;
+        Support::Allocator* mDefaultAllocator = 0;
 
+        // Auxiliary methods
+        void StartupAllocator();
+        void StartupGraphics();
     };
 
 }

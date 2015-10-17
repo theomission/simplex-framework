@@ -31,9 +31,15 @@ foreach ( MODULE ${MODULES} )
   include_directories ( "${MODULE}/include/" )
 endforeach ()
 
-foreach ( MODULE ${MODULES} )
-  add_subdirectory ( "${MODULE}" )
-endforeach ()
+add_subdirectory ( "modules/support" )
+add_subdirectory ( "modules/graphics" )
+add_subdirectory ( "modules/editor" )
+add_subdirectory ( "modules/application" )
+add_subdirectory ( "modules/testing" )
+
+# foreach ( MODULE ${MODULES} )
+#   add_subdirectory ( "${MODULE}" )
+# endforeach ()
 
 if ( BUILD_TESTS )
     include_directories ( ${SIMPLEX_FRAMEWORK_INCLUDES} ${SIMPLEX_TEST_INCLUDES})

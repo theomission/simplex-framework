@@ -1,8 +1,11 @@
+#include <stdio.h>
 #include <Simplex/Application.h>
 #include <Simplex/Support/Globals.h>
 #include <Simplex/Support/StackAllocator.h>
-using namespace Simplex::Support;
+#include <GLFW/glfw3.h>
 
+using namespace Simplex;
+using namespace Simplex::Support;
 namespace Simplex
 {
     void Application::AllocateMemory( U32 size )
@@ -12,13 +15,36 @@ namespace Simplex
 
     void Application::Startup ()
     {
-        mDefaultAllocator = new StackAllocator(mMemoryToAllocate);
-        Globals::Instance()->allocator = mDefaultAllocator;
+        StartupAllocator();
+
+        Graphics::Subsystem::Instance()->Startup();
+        Editor::Subsystem::Instance()->Startup();
+    }
+
+    void Application::StartupAllocator()
+    {
+        mDefaultAllocator = new Support::StackAllocator(mMemoryToAllocate);
+        Support::Globals::Instance()->Allocator = mDefaultAllocator;
     }
 
     void Application::Run ()
-    {}
+    {   /* Loop until the user closes the window */
+        while (!Globals::Instance()->ShouldShutdown)
+        {
+            FrameStep();
+
+            Editor::Subsystem::Instance()->Update();
+            Graphics::Subsystem::Instance()->Update();
+        }
+    }
 
     void Application::Shutdown ()
-    {}
+    {
+        Editor::Subsystem::Instance()->Shutdown();
+        Graphics::Subsystem::Instance()->Shutdown();
+        delete mDefaultAllocator;
+    }
+
 }
+
+

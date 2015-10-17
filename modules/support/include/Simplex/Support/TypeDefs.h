@@ -1,6 +1,7 @@
 #ifndef SIMPLEX_SUPPORT_TYPEDEFS_H
 #define SIMPLEX_SUPPORT_TYPEDEFS_H
 #include <xmmintrin.h>
+#include <new>
 
 #if defined(__OSX__) || defined(__LINUX__)
 typedef             char    I8;

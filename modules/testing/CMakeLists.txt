@@ -8,9 +8,9 @@ set ( INCLUDES
 )
 
 set ( SIMPLEX_TEST_INCLUDES ${SIMPLEX_TEST_INCLUDES} ${INCLUDES} CACHE INTERNAL "simplex-test-includes")
-set ( SIMPLEX_TEST_LIBRARIES ${SIMPLEX_TEST_LIBRARIES} simplex-testing pthread  CACHE INTERNAL "simplex-test-libraries")
+set ( SIMPLEX_TEST_LIBRARIES simplex-testing pthread ${SIMPLEX_TEST_LIBRARIES}  CACHE INTERNAL "simplex-test-libraries")
 
-include_directories ( ${INCLUDES} )
+include_directories ( ${INCLUDES} ${SIMPLEX_FRAMEWORK_INCLUDES} )
 
 file ( GLOB_RECURSE CODE
  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp

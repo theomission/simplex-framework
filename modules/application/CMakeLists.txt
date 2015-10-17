@@ -6,9 +6,9 @@ set ( INCLUDES
 )
 
 set ( SIMPLEX_FRAMEWORK_INCLUDES ${SIMPLEX_FRAMEWORK_INCLUDES} ${INCLUDES} CACHE INTERNAL "simplex-framework-includes")
-set ( SIMPLEX_FRAMEWORK_LIBRARIES ${SIMPLEX_FRAMEWORK_LIBRARIES} simplex-application  CACHE INTERNAL "simplex-framework-libraries")
+set ( SIMPLEX_FRAMEWORK_LIBRARIES simplex-application ${SIMPLEX_FRAMEWORK_LIBRARIES} CACHE INTERNAL "simplex-framework-libraries")
 
-include_directories ( ${INCLUDES} )
+include_directories ( ${SIMPLEX_FRAMEWORK_INCLUDES} )
 
 file ( GLOB_RECURSE CODE
  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
@@ -24,3 +24,5 @@ set ( TEST_CODE ${TEST_CODE} ${TESTS} CACHE INTERNAL "simplex-tests")
 add_library ( simplex-application STATIC
   ${CODE}
 )
+
+add_dependencies (simplex-application simplex-graphics simplex-editor)
