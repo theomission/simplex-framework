@@ -12,7 +12,7 @@ TEST ( SimplexApplication, StartupConfiguresMemory )
 
   Support::Globals* globals = Simplex::Support::Globals::Instance();
 
-  EXPECT_GT( globals->Allocator->TotalReserved(), 10);
+  EXPECT_GT( globals->Allocator->GetSize(), 99);
   a.Shutdown();
 }
 

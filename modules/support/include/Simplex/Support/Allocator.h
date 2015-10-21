@@ -18,11 +18,6 @@ namespace Simplex
 
             virtual void* Allocate(SIZE size, U8 align = DEFAULT_ALIGN) { return nullptr; };
             virtual void Deallocate(void *p) {};
-            virtual U32 AllocatedSize(void *p) { return 0; };
-            virtual U64 TotalReserved() { return 0; };
-            virtual U64 TotalAllocated() { return 0; };
-            virtual U64 TotalAvailable()  { return 0; };
-
 
             Allocator ( SIZE size, void* start );
 

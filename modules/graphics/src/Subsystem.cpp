@@ -21,6 +21,11 @@ namespace Simplex
         Subsystem::Subsystem()
         {}
 
+        Subsystem::~Subsystem()
+        {
+            Support::Globals::Instance()->Allocator->Deallocate(mInstance);
+        }
+
         void Subsystem::Startup()
         {
             void * memory = Support::Globals::Instance()->Allocator->Allocate(sizeof(Simplex::Graphics::Adapter),alignof(Simplex::Graphics::Adapter));

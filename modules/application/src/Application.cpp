@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <Simplex/Application.h>
 #include <Simplex/Support/Globals.h>
-#include <Simplex/Support/StackAllocator.h>
+#include <Simplex/Support/LinearAllocator.h>
 #include <GLFW/glfw3.h>
 
 using namespace Simplex;
@@ -23,7 +23,8 @@ namespace Simplex
 
     void Application::StartupAllocator()
     {
-        mDefaultAllocator = new Support::StackAllocator(mMemoryToAllocate);
+        void* mAllocationStartAddress = malloc(mMemoryToAllocate);
+        mDefaultAllocator = new Support::LinearAllocator(mMemoryToAllocate, mAllocationStartAddress);
         Support::Globals::Instance()->Allocator = mDefaultAllocator;
     }
 
@@ -42,7 +43,6 @@ namespace Simplex
     {
         Editor::Subsystem::Instance()->Shutdown();
         Graphics::Subsystem::Instance()->Shutdown();
-        delete mDefaultAllocator;
     }
 
 }

@@ -1,31 +1,59 @@
 #include <Simplex/Testing.h>
 #include <Simplex/Support/StackAllocator.h>
+#include "MockStruct.h"
 
-struct MockStruct
-{
-    U32 aValue;
+using namespace Simplex::Support;
+
+class SimplexSupportStackAllocator : public ::testing::Test {
+    public:
+     protected:
+      virtual void SetUp()
+      {
+        int size = 1 * 1024 * 1024; // 1MB
+        void* memory = malloc(size);
+        mAllocator = new StackAllocator(size, memory);
+      };
+
+      virtual void TearDown()
+      {
+        mAllocator->~StackAllocator();
+        free(mAllocator);
+      };
+
+      StackAllocator* mAllocator;
 };
 
-TEST ( SimplexSupportStackAllocator, InheritsFromAllocator )
+TEST_F ( SimplexSupportStackAllocator, InheritsFromAllocator )
 {
-    Simplex::Support::StackAllocator s(1);
-    ASSERT_TRUE ( dynamic_cast< Simplex::Support::Allocator* >( &s ) );
+    ASSERT_TRUE ( dynamic_cast< Simplex::Support::Allocator* >( mAllocator ) );
 }
 
-TEST ( SimplexSupportStackAllocator, AllocateWillAllocateMemory )
+TEST_F ( SimplexSupportStackAllocator, AllocateWillAllocateMemory )
 {
-    Simplex::Support::StackAllocator s(20);
-    void* memory = s.Allocate(sizeof(MockStruct), alignof(MockStruct));
+    void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
     MockStruct* ms = new(memory) MockStruct();
+
     ASSERT_EQ ( 8, sizeof(ms) );
+
+    mAllocator->Deallocate(ms);
 }
 
-TEST ( SimplexSupportStackAllocator, DeallocateRemovesFromStack )
+TEST_F ( SimplexSupportStackAllocator, GetUsedMemoryReturnsMemoryUsed )
 {
-    Simplex::Support::StackAllocator s(20);
-    void* memory = s.Allocate(sizeof(MockStruct), alignof(MockStruct));
-    ASSERT_EQ ( 8, s.TotalAllocated() );
-    s.Deallocate(memory);
-    ASSERT_EQ ( 0, s.TotalAllocated() );
+  void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
+  MockStruct* ms = new(memory) MockStruct();
+
+  ASSERT_EQ ( mAllocator->GetUsedMemory(), 8 ); // This includes header that's why it's not 4
+
+  mAllocator->Deallocate(ms);
 }
 
+TEST_F ( SimplexSupportStackAllocator, GetAllocationCountReturnsCorrectly )
+{
+  void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
+  MockStruct* ms = new(memory) MockStruct();
+
+  ASSERT_EQ ( mAllocator->GetAllocationCount(), 1 );
+
+  mAllocator->Deallocate(ms);
+}

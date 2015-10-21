@@ -1,21 +1,17 @@
 #include <Simplex/Testing.h>
 #include <Simplex/Support/LinearAllocator.h>
+#include "MockStruct.h"
 
 using namespace Simplex::Support;
 
 class SimplexSupportLinearAllocator : public ::testing::Test {
     public:
-        struct MockStruct
-        {
-            U32 aValue;
-        };
-
      protected:
-
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        mAllocator = new LinearAllocator(size, malloc(size));
+        void* memory = malloc(size);
+        mAllocator = new LinearAllocator(size, memory);
       };
 
       virtual void TearDown()
@@ -48,4 +44,24 @@ TEST_F ( SimplexSupportLinearAllocator, ClearWillRemoveAllAllocations )
     MockStruct* ms = new(memory) MockStruct();
     mAllocator->Clear();
     ASSERT_EQ(0, mAllocator->GetAllocationCount());
+}
+
+TEST_F ( SimplexSupportLinearAllocator, GetUsedMemoryReturnsMemoryUsed )
+{
+  void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
+  MockStruct* ms = new(memory) MockStruct();
+
+  ASSERT_EQ ( mAllocator->GetUsedMemory(), 4 );
+
+  mAllocator->Clear();
+}
+
+TEST_F ( SimplexSupportLinearAllocator, GetAllocationCountReturnsCorrectly )
+{
+  void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
+  MockStruct* ms = new(memory) MockStruct();
+
+  ASSERT_EQ ( mAllocator->GetAllocationCount(), 1 );
+
+  mAllocator->Clear();
 }

@@ -6,13 +6,14 @@ namespace Simplex
 {
     namespace Support
     {
-        LinearAllocator::LinearAllocator(SIZE size, void* start) : Allocator(size, start)
+        LinearAllocator::LinearAllocator(SIZE size, void* start) : Allocator(size, start), mCurrentPosition(start)
         {
             ASSERT(size > 0);
         }
 
         LinearAllocator::~LinearAllocator()
         {
+            mCurrentPosition = nullptr;
         }
 
         void* LinearAllocator::Allocate(SIZE size, U8 align)
@@ -37,7 +38,7 @@ namespace Simplex
         void LinearAllocator::Clear()
         {
             mAllocationCount     = 0;
-            mUsedMemory         = 0;
+            mUsedMemory          = 0;
             mCurrentPosition     = mStart;
         }
 

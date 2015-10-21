@@ -1,62 +1,82 @@
+#include <Simplex/Support/Assert.h>
 #include <Simplex/Support/StackAllocator.h>
+#include <Simplex/Support/PointerMath.h>
 
 namespace Simplex
 {
     namespace Support
     {
-        struct Metadata
+        StackAllocator::StackAllocator(SIZE size, void* start)
+            : Allocator(size, start), mCurrentPosition(start)
         {
-            U32 BlockSize;
-        };
+            ASSERT(size > 0);
 
-        StackAllocator::StackAllocator(U64 size) : mSize(size), Allocator(mSize, mPool)
-        {
-            mPool = new char[size];
-            mCurrentStackPosition = mPool;
+            #if __DEBUG__
+            mPreviousPosition    = nullptr;
+            #endif
         }
 
         StackAllocator::~StackAllocator()
         {
-            delete[] mPool;
+            #if __DEBUG__
+            mPreviousPosition      = nullptr;
+            #endif
+
+            mCurrentPosition       = nullptr;
         }
 
-        void* StackAllocator::Allocate(U32 size, U32 align)
+        void* StackAllocator::Allocate(SIZE size, U8 alignment)
         {
-            mCurrentStackPosition += size;
+            ASSERT(size != 0);
 
-            Metadata* m = (Metadata*)(mCurrentStackPosition);
-            m->BlockSize = size;
-            mCurrentStackPosition += sizeof(Metadata);
+            U8 adjustment = PointerMath::AlignForwardAdjustmentWithHeader(
+                mCurrentPosition, alignment, sizeof(AllocationHeader));
 
-            return mCurrentStackPosition;
+            if(mUsedMemory + adjustment + size > mSize)
+                return nullptr;
+
+            void* aligned_address = PointerMath::Add(
+                mCurrentPosition, adjustment);
+
+            AllocationHeader* header = (AllocationHeader*)(
+                PointerMath::Subtract(aligned_address, sizeof(AllocationHeader))
+            );
+
+            header->Adjustment   = adjustment;
+
+            #if __DEBUG__
+            header->PreviousAddress = mPreviousPosition;
+            mPreviousPosition       = aligned_address;
+            #endif
+
+            mCurrentPosition = PointerMath::Add(aligned_address, size);
+
+            mUsedMemory += size + adjustment;
+            mAllocationCount++;
+
+            return aligned_address;
         }
 
-        void StackAllocator::Deallocate(void *p)
+        void StackAllocator::Deallocate(void* p)
         {
-            mCurrentStackPosition -= sizeof(Metadata);
-            Metadata* m = (Metadata*)(mCurrentStackPosition);
-            mCurrentStackPosition -= m->BlockSize;
-        }
+            #if __DEBUG__
+            ASSERT( p == mPreviousPosition );
+            #endif
 
-        U32 StackAllocator::AllocatedSize(void *p)
-        {
-            return 0;
-        }
+            AllocationHeader* header = (AllocationHeader*)(
+                PointerMath::Subtract(p, sizeof(AllocationHeader))
+            );
 
-        U64 StackAllocator::TotalReserved()
-        {
-            return mSize;
-        }
+            mUsedMemory -= (UPTR)mCurrentPosition -
+                (UPTR)p + header->Adjustment;
 
-        U64 StackAllocator::TotalAllocated()
-        {
-            return mCurrentStackPosition - mPool;
-        }
+            mCurrentPosition = PointerMath::Subtract(p, header->Adjustment);
 
-        U64 StackAllocator::TotalAvailable()
-        {
-            return TotalReserved() - TotalAllocated();
-        }
+            #if _DEBUG
+            mPreviousPosition = header->PreviousAddress;
+            #endif
 
+            mAllocationCount--;
+        }
     }
 }

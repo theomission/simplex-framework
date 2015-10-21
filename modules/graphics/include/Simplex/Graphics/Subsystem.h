@@ -20,6 +20,8 @@ namespace Simplex
             virtual void Update() override;
             virtual void Shutdown() override;
 
+            ~Subsystem();
+
             Adapter* Adapter = 0;
         private:
             static Subsystem* mInstance;

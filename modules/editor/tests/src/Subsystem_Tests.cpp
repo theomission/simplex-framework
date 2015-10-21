@@ -1,18 +1,40 @@
 #include <Simplex/Testing.h>
+#include <Simplex/Support/LinearAllocator.h>
 #include <Simplex/Support/Subsystem.h>
 #include <Simplex/Editor/Subsystem.h>
 
 using namespace Simplex::Editor;
 
-TEST ( SimplexEditorSubsystem, IsASingleton )
+class SimplexEditorSubsystem : public ::testing::Test {
+    public:
+     protected:
+      virtual void SetUp()
+      {
+        int size = 1 * 1024 * 1024; // 1MB
+        void* memory = malloc(size);
+        mAllocator = new Simplex::Support::LinearAllocator(size, memory);
+        Simplex::Support::Globals::Instance()->Allocator = mAllocator;
+      };
+
+      virtual void TearDown()
+      {
+        mAllocator->~LinearAllocator();
+        free(mAllocator);
+      };
+
+      Simplex::Support::LinearAllocator* mAllocator;
+};
+
+TEST_F ( SimplexEditorSubsystem, IsASingleton )
 {
-    Simplex::Support::Globals::Instance()->Allocator = new Support::StackAllocator(100);
     EXPECT_TRUE ( Subsystem::Instance() != NULL );
+    ((Simplex::Support::LinearAllocator*)Support::Globals::Instance()->Allocator)->Clear();
 }
 
-TEST ( SimplexEditorSubsystem, InheritsFromSimplexSupportSubsystem )
+TEST_F ( SimplexEditorSubsystem, InheritsFromSimplexSupportSubsystem )
 {
     ASSERT_TRUE ( dynamic_cast< Support::Subsystem* >( Subsystem::Instance() ) );
+    ((Simplex::Support::LinearAllocator*)Support::Globals::Instance()->Allocator)->Clear();
 }
 
 // TODO see how to fix these

@@ -25,6 +25,7 @@ namespace Simplex
 
         U32 mMemoryToAllocate = 1000 * 1024 * 1024; // Defaults to 1GB
         Support::Allocator* mDefaultAllocator = 0;
+        void* mAllocationStartAddress;
 
         // Auxiliary methods
         void StartupAllocator();

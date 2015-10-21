@@ -42,6 +42,9 @@ namespace Simplex
             glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
             glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 2 );
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            #if __OSX__
+                glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+            #endif
 
             Window = glfwCreateWindow ( width, height, "Application", monitor, NULL );
 

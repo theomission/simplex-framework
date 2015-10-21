@@ -10,19 +10,31 @@ namespace Simplex
         class StackAllocator : public Allocator
         {
         public:
-            StackAllocator(U64 size);
+            StackAllocator(SIZE size, void* start);
             ~StackAllocator();
-            void* Allocate(U32 size, U32 align = DEFAULT_ALIGN);
-            void Deallocate(void *p);
-            U32 AllocatedSize(void *p);
-            U64 TotalReserved();
-            U64 TotalAllocated();
-            U64 TotalAvailable();
-        private:
-            char* mPool;
-            char* mCurrentStackPosition = 0;
 
-            U64 mSize;
+            void* Allocate(SIZE size, U8 alignment) override;
+
+            void Deallocate(void* p) override;
+
+        private:
+            StackAllocator(const StackAllocator&);
+            StackAllocator& operator=(const StackAllocator&);
+
+            struct AllocationHeader
+            {
+                #if __DEBUG__
+                void* PreviousAddress;
+                #endif
+                U8 Adjustment;
+            };
+
+            #if __DEBUG__
+            void* mPreviousPosition;
+            #endif
+
+            void*  mCurrentPosition;
+
         };
     }
 }
