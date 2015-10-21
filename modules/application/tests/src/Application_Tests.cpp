@@ -1,8 +1,28 @@
-#ifndef __CI_BUILD__
 #include <Simplex/Testing.h>
 #include <Simplex/Application.h>
-
+#include <Simplex/Support/Subsystem.h>
 using namespace Simplex;
+
+class SubsystemMock : public Simplex::Support::Subsystem
+{
+  public:
+    std::string FunctionCalled;
+
+    virtual void Startup() override
+    {
+      FunctionCalled = "Startup";
+      Initialized = true;
+    };
+    virtual void Update() override
+    {
+      FunctionCalled = "Update";
+    };
+    virtual void Shutdown() override
+    {
+      FunctionCalled = "Shutdown";
+    };
+};
+
 TEST ( SimplexApplication, StartupConfiguresMemory )
 {
   Application a;
@@ -16,25 +36,14 @@ TEST ( SimplexApplication, StartupConfiguresMemory )
   a.Shutdown();
 }
 
-TEST ( SimplexApplication, StartupInitializesGraphics )
-{
-  Application a;
+// TEST ( SimplexApplication, AddSubsystemAddsSubsystem )
+// {
+//   Application a;
+//   SubsystemMock s;
 
-  a.AllocateMemory(100);
-  a.Startup();
+//   a.AddSubsystem(&s);
 
-  EXPECT_EQ( Graphics::Subsystem::Instance()->Initialized, true );
-  a.Shutdown();
-}
+//   a.Startup();
 
-TEST ( SimplexApplication, StartupInitializesEditor )
-{
-  Application a;
-
-  a.AllocateMemory(100);
-  a.Startup();
-
-  EXPECT_EQ( Editor::Subsystem::Instance()->Initialized, true );
-  a.Shutdown();
-}
-#endif
+//   ASSERT_TRUE( s.FunctionCalled == "Startup" );
+// }

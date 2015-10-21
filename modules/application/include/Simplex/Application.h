@@ -3,8 +3,7 @@
 
 #include <Simplex/Support/Allocator.h>
 #include <Simplex/Support/Globals.h>
-#include <Simplex/Graphics.h>
-#include <Simplex/Editor.h>
+#include <Simplex/Support/Subsystem.h>
 
 using namespace Simplex;
 
@@ -18,6 +17,8 @@ namespace Simplex
         virtual void Run();
         virtual void Shutdown();
 
+        void AddSubsystem(Support::Subsystem* subsystem);
+
     protected:
         virtual void FrameStep() {};
 
@@ -27,10 +28,11 @@ namespace Simplex
         Support::Allocator* mDefaultAllocator = 0;
         void* mAllocationStartAddress;
 
-        // Auxiliary methods
         void StartupAllocator();
-        void StartupGraphics();
     };
+
+
+
 
 }
 #endif
