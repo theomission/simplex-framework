@@ -1,7 +1,6 @@
 #include <Simplex/Support.h>
 #include <Simplex/Graphics/Subsystem.h>
 
-
 namespace Simplex
 {
     namespace Graphics
@@ -45,6 +44,5 @@ namespace Simplex
             Support::Globals::Instance()->Allocator->Deallocate(Adapter);
             Initialized = false;
         }
-
     }
 }

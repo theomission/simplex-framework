@@ -2,11 +2,16 @@ cmake_minimum_required(VERSION 2.8)
 project(simplex-framework)
 
 option(BUILD_TESTS "Build tests" OFF)
+option(CI_BUILD    "This build is running in CI" OFF)
 
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=gnu++11" CACHE INTERNAL "cmake_cxx_flags")
 
 if ( ${COVERAGE} )
     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -O0" CACHE INTERNAL "cmake_cxx_flags")
+endif ( ${COVERAGE})
+
+if ( ${CI_BUILD} )
+    set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__CI_BUILD__" CACHE INTERNAL "cmake_cxx_flags")
 endif ( ${COVERAGE})
 
 set ( LINUX FALSE )

@@ -1,8 +1,8 @@
+#ifndef __CI_BUILD__
 #include <Simplex/Testing.h>
 #include <Simplex/Application.h>
 
 using namespace Simplex;
-
 TEST ( SimplexApplication, StartupConfiguresMemory )
 {
   Application a;
@@ -37,3 +37,4 @@ TEST ( SimplexApplication, StartupInitializesEditor )
   EXPECT_EQ( Editor::Subsystem::Instance()->Initialized, true );
   a.Shutdown();
 }
+#endif

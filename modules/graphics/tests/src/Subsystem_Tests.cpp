@@ -36,15 +36,17 @@ TEST_F ( SimplexGraphicsSubsystem, InheritsFromSimplexSupportSubsystem )
     ASSERT_TRUE ( dynamic_cast< Simplex::Support::Subsystem* >( Subsystem::Instance() ) );
 }
 
-TEST_F ( SimplexGraphicsSubsystem, StartupUpdateInitialize )
+#ifndef __CI_BUILD__
+TEST_F ( SimplexGraphicsSubsystem, StartupUpdateInitialized )
 {
     Subsystem::Instance()->Startup();
     ASSERT_TRUE ( Subsystem::Instance()->Initialized );
     ((Simplex::Support::LinearAllocator*)Support::Globals::Instance()->Allocator)->Clear();
 }
-TEST_F ( SimplexGraphicsSubsystem, ShutdownUpdatesInitialize )
+TEST_F ( SimplexGraphicsSubsystem, ShutdownUpdatesInitialized )
 {
     Subsystem::Instance()->Shutdown();
     ASSERT_FALSE ( Subsystem::Instance()->Initialized );
     ((Simplex::Support::LinearAllocator*)Support::Globals::Instance()->Allocator)->Clear();
 }
+#endif

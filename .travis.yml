@@ -6,7 +6,7 @@ compiler:
 addons:
   apt:
     sources:
-    - kalakris-cmake
+    - kubuntu-backports
     packages:
     - cmake
 
@@ -17,7 +17,7 @@ before_install:
 script:
   - mkdir build
   - cd build
-  - cmake ../ -DCOVERAGE=TRUE -DBUILD_TESTS=TRUE
+  - cmake ../ -DCI_BUILD=TRUE -DCOVERAGE=TRUE -DBUILD_TESTS=TRUE
   - make "$@"
   - cd ..
   - cd build
