@@ -9,7 +9,7 @@ namespace Simplex
             U32 BlockSize;
         };
 
-        StackAllocator::StackAllocator(U64 size) : mSize(size)
+        StackAllocator::StackAllocator(U64 size) : mSize(size), Allocator(mSize, mPool)
         {
             mPool = new char[size];
             mCurrentStackPosition = mPool;

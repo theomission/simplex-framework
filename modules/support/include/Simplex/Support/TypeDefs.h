@@ -2,8 +2,12 @@
 #define SIMPLEX_SUPPORT_TYPEDEFS_H
 #include <xmmintrin.h>
 #include <new>
+#include <cstdint>
 
 #if defined(__OSX__) || defined(__LINUX__)
+typedef             uintptr_t UPTR;
+typedef             size_t SIZE;
+
 typedef             char    I8;
 typedef             short   I16;
 typedef             int     I32;

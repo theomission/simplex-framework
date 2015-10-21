@@ -1,6 +1,23 @@
 #include <Simplex/Testing.h>
 #include <Simplex/Support/TypeDefs.h>
 
+// Pointers
+TEST ( SimplexSupportTypeDefs, UPTRSizeEqualsVoidPointer)
+{
+  void* ptr1;
+  UPTR ptr2;
+
+  ASSERT_EQ(sizeof(ptr2), sizeof(ptr1));
+}
+
+TEST ( SimplexSupportTypeDefs, SizeofSIZEEqualsSizeT )
+{
+  size_t size1;
+  SIZE size2;
+
+  ASSERT_EQ(sizeof(size2), sizeof(size1));
+}
+
 // SIMD
 TEST ( SimplexSupportTypeDefs, VF32SizeIs16Bytes )
 {
