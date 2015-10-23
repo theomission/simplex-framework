@@ -1,31 +1,32 @@
-// #ifndef SIMPLEX_SUPPORT_POOL_ALLOCATOR_H
-// #define SIMPLEX_SUPPORT_POOL_ALLOCATOR_H
+#ifndef SIMPLEX_SUPPORT_POOL_ALLOCATOR_H
+#define SIMPLEX_SUPPORT_POOL_ALLOCATOR_H
 
-// #include <Simplex/Support/Allocator.h>
-// namespace Simplex
-// {
-//     namespace Support
-//     {
-//         class PoolAllocator : public Allocator
-//         {
-//         public:
-//             PoolAllocator(SIZE objectSize, U8 objectAlignment, SIZE size, void* mem);
-//             ~PoolAllocator();
+#include <Simplex/Support/Allocator.h>
 
-//             void* Allocate(SIZE size, U8 alignment) override;
+namespace Simplex
+{
+    namespace Support
+    {
+        class PoolAllocator : public Allocator
+        {
+        public:
+            PoolAllocator(SIZE objectSize, U8 objectAlign, SIZE size, void* mem);
+            ~PoolAllocator();
 
-//             void Deallocate(void* p) override;
+            void* Allocate(SIZE size, U8 alignment) override;
 
-//         private:
-//             PoolAllocator(const PoolAllocator&); //Prevent copies because it might cause errors
-//             PoolAllocator& operator=(const PoolAllocator&);
+            void Deallocate(void* p) override;
 
-//             SIZE     mObjectSize;
-//             U8         mObjectAlignment;
+        private:
+            PoolAllocator(const PoolAllocator&); //Prevent copies because it might cause errors
+            PoolAllocator& operator=(const PoolAllocator&);
 
-//             void**     mLinkedList;
-//         };
-//     }
-// }
+            SIZE     mObjectSize;
+            U8         mObjectAlign;
 
-// #endif
+            void**     mFreeList;
+        };
+    }
+}
+
+#endif

@@ -6,5 +6,9 @@ struct MockStruct
     U32 aValue;
 };
 
+struct MockStructBig
+{
+    VF32 aValue;
+};
 
 #endif
