@@ -1,5 +1,5 @@
-#ifndef POINTER_MATH_H
-#define POINTER_MATH_H
+#ifndef SIMPLEX_SUPPORT_POINTER_MATH_H
+#define SIMPLEX_SUPPORT_POINTER_MATH_H
 
 // TODO: TEST THIS!!!
 namespace PointerMath

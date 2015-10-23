@@ -1,34 +1,34 @@
 #include <Simplex/Testing.h>
-#include <Simplex/Support/StackAllocator.h>
+#include <Simplex/Support/LinkedListAllocator.h>
 #include "MockStruct.h"
 
 using namespace Simplex::Support;
 
-class SimplexSupportStackAllocator : public ::testing::Test {
+class SimplexSupportLinkedListAllocator : public ::testing::Test {
     public:
      protected:
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
         void* memory = malloc(size);
-        mAllocator = new StackAllocator(size, memory);
+        mAllocator = new LinkedListAllocator(size, memory);
       };
 
       virtual void TearDown()
       {
-        mAllocator->~StackAllocator();
+        mAllocator->~LinkedListAllocator();
         free(mAllocator);
       };
 
-      StackAllocator* mAllocator;
+      LinkedListAllocator* mAllocator;
 };
 
-TEST_F ( SimplexSupportStackAllocator, InheritsFromAllocator )
+TEST_F ( SimplexSupportLinkedListAllocator, InheritsFromAllocator )
 {
     ASSERT_TRUE ( dynamic_cast< Simplex::Support::Allocator* >( mAllocator ) );
 }
 
-TEST_F ( SimplexSupportStackAllocator, AllocateWillAllocateMemory )
+TEST_F ( SimplexSupportLinkedListAllocator, AllocateWillAllocateMemory )
 {
     void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
     MockStruct* ms = new(memory) MockStruct();
@@ -38,17 +38,17 @@ TEST_F ( SimplexSupportStackAllocator, AllocateWillAllocateMemory )
     mAllocator->Deallocate(ms);
 }
 
-TEST_F ( SimplexSupportStackAllocator, GetUsedMemoryReturnsMemoryUsed )
+TEST_F ( SimplexSupportLinkedListAllocator, GetUsedMemoryReturnsMemoryUsed )
 {
   void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
   MockStruct* ms = new(memory) MockStruct();
 
-  ASSERT_EQ ( mAllocator->GetUsedMemory(), 8 ); // This includes header that's why it's not 4
+  ASSERT_EQ ( mAllocator->GetUsedMemory(), 20 ); // This includes header that's why it's not 4
 
   mAllocator->Deallocate(ms);
 }
 
-TEST_F ( SimplexSupportStackAllocator, GetAllocationCountReturnsCorrectly )
+TEST_F ( SimplexSupportLinkedListAllocator, GetAllocationCountReturnsCorrectly )
 {
   void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
   MockStruct* ms = new(memory) MockStruct();
@@ -58,7 +58,7 @@ TEST_F ( SimplexSupportStackAllocator, GetAllocationCountReturnsCorrectly )
   mAllocator->Deallocate(ms);
 }
 
-TEST_F ( SimplexSupportStackAllocator, DeallocateWorks )
+TEST_F ( SimplexSupportLinkedListAllocator, DeallocateWorks )
 {
   void* memory = mAllocator->Allocate(sizeof(MockStruct), alignof(MockStruct));
   MockStruct* ms = new(memory) MockStruct();

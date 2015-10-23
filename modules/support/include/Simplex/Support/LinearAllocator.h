@@ -1,5 +1,5 @@
-#ifndef LINEAR_ALLOCATOR_H
-#define LINEAR_ALLOCATOR_H
+#ifndef SIMPLEX_SUPPORT_LINEAR_ALLOCATOR_H
+#define SIMPLEX_SUPPORT_LINEAR_ALLOCATOR_H
 
 #include <Simplex/Support/Allocator.h>
 
