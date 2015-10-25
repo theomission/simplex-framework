@@ -1,6 +1,9 @@
 #include <Simplex/Support/LinkedListAllocator.h>
 #include <Simplex/Support/PointerMath.h>
 #include <Simplex/Support/Assert.h>
+
+#include <stdio.h>
+
 namespace Simplex
 {
     namespace Support
@@ -81,7 +84,7 @@ namespace Simplex
                 return (void*)aligned_address;
             }
 
-            //ASSERT(false && "Couldn't find free block large enough!");
+            ASSERT(false && "Couldn't find free block large enough!");
 
             return nullptr;
         }
@@ -89,6 +92,7 @@ namespace Simplex
         void LinkedListAllocator::Deallocate(void* p)
         {
             ASSERT(p != nullptr);
+            ASSERT(mAllocationCount > 0);
 
             AllocationHeader* header = (AllocationHeader*)PointerMath::Subtract(p, sizeof(AllocationHeader));
 
