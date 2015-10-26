@@ -5,6 +5,8 @@
 #include <Simplex/Graphics.h>
 #include <Simplex/Editor.h>
 #include <GLFW/glfw3.h>
+#include <stdio.h>
+
 using namespace Simplex;
 using namespace Simplex::Support;
 namespace Simplex
@@ -17,6 +19,7 @@ namespace Simplex
     void Application::Startup ()
     {
         StartupAllocator();
+        SetupLinkedListForSubsystems();
 
         // Graphics::Subsystem::Instance()->Startup();
         // Editor::Subsystem::Instance()->Startup();
@@ -27,6 +30,12 @@ namespace Simplex
         void* mAllocationStartAddress = malloc(mMemoryToAllocate);
         mDefaultAllocator = new Support::LinearAllocator(mMemoryToAllocate, mAllocationStartAddress);
         Support::Globals::Instance()->Allocator = mDefaultAllocator;
+    }
+
+    void Application::SetupLinkedListForSubsystems()
+    {
+        void* memory = mDefaultAllocator->Allocate(sizeof(DoublyLinkedList), alignof(DoublyLinkedList));
+        mSubsystems = new(memory) DoublyLinkedList(mSubsystemCount);
     }
 
     void Application::Run ()
@@ -46,10 +55,16 @@ namespace Simplex
         // Graphics::Subsystem::Instance()->Shutdown();
     }
 
+    void Application::SetSubsystemCount(U32 count)
+    {
+        mSubsystemCount = count;
+    }
+
     void Application::AddSubsystem(Support::Subsystem* subsystem)
     {
 
     }
+
 }
 
 

@@ -4,6 +4,7 @@
 #include <Simplex/Support/Allocator.h>
 #include <Simplex/Support/Globals.h>
 #include <Simplex/Support/Subsystem.h>
+#include <Simplex/Support/DoublyLinkedList.h>
 
 using namespace Simplex;
 
@@ -17,6 +18,7 @@ namespace Simplex
         virtual void Run();
         virtual void Shutdown();
 
+        void SetSubsystemCount(U32 count);
         void AddSubsystem(Support::Subsystem* subsystem);
 
     protected:
@@ -29,6 +31,11 @@ namespace Simplex
         void* mAllocationStartAddress;
 
         void StartupAllocator();
+        void SetupLinkedListForSubsystems();
+
+        U32 mSubsystemCount = 1;
+        Support::DoublyLinkedList* mSubsystems;
+
     };
 
 

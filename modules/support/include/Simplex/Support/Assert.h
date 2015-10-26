@@ -1,9 +1,24 @@
-#include <assert.h>
-#define ASSERT assert
-
 #include <Simplex/Support/TypeDefs.h>
 #include <execinfo.h>
-#include <stdio.h>
+#include <iostream>
+
+#ifndef NDEBUG
+  #include <cassert>
+  #define ASSERT(condition) \
+  { \
+      if(!(condition)) \
+      { \
+          std::cerr << "\n\nAssertion failed at " << __FILE__ << ":" << __LINE__; \
+          std::cerr << " inside " << __FUNCTION__ << std::endl; \
+          std::cerr << "Condition: " << #condition << std::endl; \
+          printStackTrace(); \
+          abort(); \
+      } \
+  }
+#else
+  #define ASSERT(condition) (condition)
+#endif
+
 
 static inline void printStackTrace(U32 max_frames = 63 )
 {

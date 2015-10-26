@@ -36,6 +36,20 @@ TEST ( SimplexApplication, StartupConfiguresMemory )
   a.Shutdown();
 }
 
+TEST ( SimplexApplication, SetSubsystemCountReservesMemory )
+{
+  Application a;
+
+  a.AllocateMemory(1024);
+
+  a.SetSubsystemCount(2);
+  a.Startup();
+
+  Support::Globals* globals = Simplex::Support::Globals::Instance();
+
+  EXPECT_GT( globals->Allocator->GetUsedMemory(), 0 );
+  a.Shutdown();
+}
 // TEST ( SimplexApplication, AddSubsystemAddsSubsystem )
 // {
 //   Application a;
