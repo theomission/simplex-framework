@@ -18,8 +18,8 @@ namespace Simplex
     {
         StartupAllocator();
 
-        Graphics::Subsystem::Instance()->Startup();
-        Editor::Subsystem::Instance()->Startup();
+        // Graphics::Subsystem::Instance()->Startup();
+        // Editor::Subsystem::Instance()->Startup();
     }
 
     void Application::StartupAllocator()
@@ -35,15 +35,15 @@ namespace Simplex
         {
             FrameStep();
 
-            Editor::Subsystem::Instance()->Update();
-            Graphics::Subsystem::Instance()->Update();
+            // Editor::Subsystem::Instance()->Update();
+            // Graphics::Subsystem::Instance()->Update();
         }
     }
 
     void Application::Shutdown ()
     {
-        Editor::Subsystem::Instance()->Shutdown();
-        Graphics::Subsystem::Instance()->Shutdown();
+        // Editor::Subsystem::Instance()->Shutdown();
+        // Graphics::Subsystem::Instance()->Shutdown();
     }
 
     void Application::AddSubsystem(Support::Subsystem* subsystem)
