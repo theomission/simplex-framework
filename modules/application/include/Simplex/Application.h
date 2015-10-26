@@ -26,7 +26,6 @@ namespace Simplex
 
     private:
 
-        U32 mMemoryToAllocate = 1000 * 1024 * 1024; // Defaults to 1GB
         Support::Allocator* mDefaultAllocator = 0;
         void* mAllocationStartAddress;
 
@@ -36,7 +35,7 @@ namespace Simplex
         void SetupLinkedListForSubsystems();
 
         U32 mSubsystemCount = 1;
-        Support::DoublyLinkedList* mSubsystems;
+        Support::DoublyLinkedList* mSubsystems = 0;
 
     };
 

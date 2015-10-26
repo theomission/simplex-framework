@@ -10,16 +10,18 @@ class SimplexSupportPoolAllocator : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mAllocator = new PoolAllocator(sizeof(MockStructBig), alignof(MockStructBig), size, memory);
+        mMemory = malloc(size);
+        mAllocator = new PoolAllocator(sizeof(MockStructBig), alignof(MockStructBig), size, mMemory);
       };
 
       virtual void TearDown()
       {
         mAllocator->~PoolAllocator();
-        free(mAllocator);
+        delete(mAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       PoolAllocator* mAllocator;
 };
 

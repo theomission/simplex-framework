@@ -11,17 +11,19 @@ class SimplexEditorSubsystem : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mAllocator = new Simplex::Support::LinearAllocator(size, memory);
+        mMemory = malloc(size);
+        mAllocator = new Simplex::Support::LinearAllocator(size, mMemory);
         Simplex::Support::Globals::Instance()->Allocator = mAllocator;
       };
 
       virtual void TearDown()
       {
         mAllocator->~LinearAllocator();
-        free(mAllocator);
+        delete(mAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       Simplex::Support::LinearAllocator* mAllocator;
 };
 

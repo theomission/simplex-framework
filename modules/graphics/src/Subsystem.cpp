@@ -5,7 +5,7 @@ namespace Simplex
 {
     namespace Graphics
     {
-        Subsystem* Subsystem::mInstance = NULL;
+        Subsystem* Subsystem::mInstance = nullptr;
 
         Subsystem* Subsystem::Instance()
         {
@@ -17,17 +17,23 @@ namespace Simplex
                 return mInstance;
         }
 
+        void Subsystem::Destroy()
+        {
+            Subsystem::Instance()->~Subsystem();
+             Support::Globals::Instance()->Allocator->Deallocate(Subsystem::Instance());
+             mInstance = nullptr;
+        }
+
         Subsystem::Subsystem()
         {}
 
         Subsystem::~Subsystem()
         {
-            Support::Globals::Instance()->Allocator->Deallocate(mInstance);
         }
 
         void Subsystem::Startup()
         {
-            void * memory = Support::Globals::Instance()->Allocator->Allocate(sizeof(Simplex::Graphics::Adapter),alignof(Simplex::Graphics::Adapter));
+            void* memory = Support::Globals::Instance()->Allocator->Allocate(sizeof(Simplex::Graphics::Adapter),alignof(Simplex::Graphics::Adapter));
             Adapter = new(memory) Graphics::Adapter();
             Adapter->Startup(1920,1080, false);
             Initialized = true;

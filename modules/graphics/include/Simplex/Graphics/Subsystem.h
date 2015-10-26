@@ -15,6 +15,7 @@ namespace Simplex
         {
         public:
             static Subsystem* Instance();
+            static void Destroy();
 
             virtual void Startup() override;
             virtual void Update() override;
@@ -24,6 +25,7 @@ namespace Simplex
 
             Adapter* Adapter = 0;
         private:
+            void* mMemory;
             static Subsystem* mInstance;
             Subsystem();
         };

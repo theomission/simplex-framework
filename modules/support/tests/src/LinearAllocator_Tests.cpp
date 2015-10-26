@@ -10,16 +10,18 @@ class SimplexSupportLinearAllocator : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mAllocator = new LinearAllocator(size, memory);
+        mMemory = malloc(size);
+        mAllocator = new LinearAllocator(size, mMemory);
       };
 
       virtual void TearDown()
       {
         mAllocator->~LinearAllocator();
-        free(mAllocator);
+        delete(mAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       LinearAllocator* mAllocator;
 };
 

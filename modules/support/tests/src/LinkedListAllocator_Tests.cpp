@@ -10,16 +10,18 @@ class SimplexSupportLinkedListAllocator : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mAllocator = new LinkedListAllocator(size, memory);
+        mMemory = malloc(size);
+        mAllocator = new LinkedListAllocator(size, mMemory);
       };
 
       virtual void TearDown()
       {
         mAllocator->~LinkedListAllocator();
-        free(mAllocator);
+        delete(mAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       LinkedListAllocator* mAllocator;
 };
 

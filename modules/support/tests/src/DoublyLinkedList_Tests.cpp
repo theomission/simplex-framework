@@ -12,17 +12,19 @@ class SimplexSupportDoublyLinkedList : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mAllocator = new Simplex::Support::LinkedListAllocator(size, memory);
+        mMemory = malloc(size);
+        mAllocator = new Simplex::Support::LinkedListAllocator(size, mMemory);
         Simplex::Support::Globals::Instance()->Allocator = mAllocator;
       };
 
       virtual void TearDown()
       {
         mAllocator->~LinkedListAllocator();
-        free(mAllocator);
+        delete(mAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       Simplex::Support::LinkedListAllocator* mAllocator;
 };
 
@@ -50,6 +52,7 @@ TEST_F( SimplexSupportDoublyLinkedList, PushBackAddsElement )
     list.PushBack( m );
 
     ASSERT_EQ ( (MockStruct*)list.Last()->Value, m );
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushBackSetsPreviousAndNextCorrectly )
@@ -64,6 +67,9 @@ TEST_F( SimplexSupportDoublyLinkedList, PushBackSetsPreviousAndNextCorrectly )
 
     ASSERT_EQ( list.Last()->Previous->Value, m1);
     ASSERT_EQ( list.First()->Next->Value, m2);
+
+    delete(m1);
+    delete(m2);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushBackSetsFirstElementIfNoElementPresent )
@@ -74,6 +80,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PushBackSetsFirstElementIfNoElementPrese
     list.PushBack( m );
 
     ASSERT_EQ ( (MockStruct*)list.First()->Value, m );
+
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushBackReservesMemoryToHoldOneNodeByDefault )
@@ -85,6 +93,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PushBackReservesMemoryToHoldOneNodeByDef
     list.PushBack(m);
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 1);
+
+    delete(m);
 }
 
 //
@@ -99,6 +109,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontAddsElement )
     list.PushFront( m );
 
     ASSERT_EQ ( (MockStruct*)list.First()->Value, m );
+
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushFrontSetsLastElementIfNoElementPresent )
@@ -109,6 +121,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontSetsLastElementIfNoElementPrese
     list.PushFront( m );
 
     ASSERT_EQ ( (MockStruct*)list.Last()->Value, m );
+
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushFrontReservesMemoryToHoldOneNodeByDefault )
@@ -120,6 +134,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontReservesMemoryToHoldOneNodeByDe
     list.PushFront(m);
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 1);
+
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushFrontPreservesConnectionToPreviousFirst )
@@ -133,6 +149,9 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontPreservesConnectionToPreviousFi
     list.PushFront(m2);
 
     ASSERT_EQ(list.First()->Next->Value, (MockStruct*)m1);
+
+    delete(m1);
+    delete(m2);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PushFrontSetsPreviousAndNextCorrectly )
@@ -147,6 +166,9 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontSetsPreviousAndNextCorrectly )
 
     ASSERT_EQ( list.Last()->Previous->Value, m2);
     ASSERT_EQ( list.First()->Next->Value, m1);
+
+    delete(m1);
+    delete(m2);
 }
 
 
@@ -156,11 +178,11 @@ TEST_F( SimplexSupportDoublyLinkedList, PushFrontSetsPreviousAndNextCorrectly )
 
 TEST_F( SimplexSupportDoublyLinkedList, PopBackDeallocatesNode )
 {
-    MockStruct* m1 = new MockStruct();
+    MockStruct* m = new MockStruct();
 
     DoublyLinkedList list;
 
-    list.PushBack(m1);
+    list.PushBack(m);
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 1);
 
@@ -168,6 +190,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PopBackDeallocatesNode )
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 0);
     ASSERT_EQ(mAllocator->GetUsedMemory(), 0);
+
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PopBackUpdatesFirstWhenListIsEmptied )
@@ -179,6 +203,7 @@ TEST_F( SimplexSupportDoublyLinkedList, PopBackUpdatesFirstWhenListIsEmptied )
     list.PopBack();
 
     ASSERT_EQ ( list.First(), nullptr );
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PopBackReturnsObject )
@@ -188,9 +213,12 @@ TEST_F( SimplexSupportDoublyLinkedList, PopBackReturnsObject )
     DoublyLinkedList list;
 
     list.PushBack(m1);
+
     MockStruct*m2 = (MockStruct*) list.PopBack();
 
     ASSERT_EQ(m2, m1);
+
+    delete(m1);
 }
 
 //
@@ -211,6 +239,8 @@ TEST_F( SimplexSupportDoublyLinkedList, PopFrontDeallocatesNode )
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 0);
     ASSERT_EQ(mAllocator->GetUsedMemory(), 0);
+
+    delete(m1);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PopFrontUpdatesLastWhenListIsEmptied )
@@ -222,6 +252,7 @@ TEST_F( SimplexSupportDoublyLinkedList, PopFrontUpdatesLastWhenListIsEmptied )
     list.PopFront();
 
     ASSERT_EQ ( list.Last(), nullptr );
+    delete(m);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, PopFrontReturnsObject )
@@ -234,6 +265,7 @@ TEST_F( SimplexSupportDoublyLinkedList, PopFrontReturnsObject )
     MockStruct*m2 = (MockStruct*) list.PopFront();
 
     ASSERT_EQ(m2, m1);
+    delete(m1);
 }
 
 //
@@ -250,6 +282,9 @@ TEST_F( SimplexSupportDoublyLinkedList, LastPreservesConnectionToPreviousLast )
     list.PushBack(m2);
 
     ASSERT_EQ(list.Last()->Previous->Value, (MockStruct*)m1);
+
+    delete(m1);
+    delete(m2);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, LastReturnsLastAddedElement )
@@ -272,6 +307,9 @@ TEST_F( SimplexSupportDoublyLinkedList, LastReturnsLastAddedElement )
 
     ASSERT_EQ(list.Last()->Value, (MockStruct*)m3);
 
+    delete(m1);
+    delete(m2);
+    delete(m3);
 }
 
 //
@@ -296,6 +334,11 @@ TEST_F( SimplexSupportDoublyLinkedList, FirstReturnsLastElementPushedToFront )
     list.PushFront(m3);
 
     ASSERT_EQ(list.First()->Value, (MockStruct*)m3);
+
+    delete(m1);
+    delete(m2);
+    delete(m3);
+
 }
 
 //
@@ -316,6 +359,10 @@ TEST_F( SimplexSupportDoublyLinkedList, AtReturnsObjectAtSpecifiedIndex )
     ASSERT_EQ(list.At(0)->Value, (MockStruct*)m1);
     ASSERT_EQ(list.At(1)->Value, (MockStruct*)m2);
     ASSERT_EQ(list.At(2)->Value, (MockStruct*)m3);
+
+    delete(m1);
+    delete(m2);
+    delete(m3);
 }
 
 //
@@ -337,6 +384,10 @@ TEST_F( SimplexSupportDoublyLinkedList, RemoveAtLeavesAConsistentList )
 
     ASSERT_EQ((MockStruct*)list.First()->Next->Value, m3);
     ASSERT_EQ((MockStruct*)list.Last()->Previous->Value, m1);
+
+    delete(m1);
+    delete(m2);
+    delete(m3);
 }
 
 TEST_F( SimplexSupportDoublyLinkedList, RemoveAtReturnsValue )
@@ -352,6 +403,9 @@ TEST_F( SimplexSupportDoublyLinkedList, RemoveAtReturnsValue )
     MockStruct* result = (MockStruct*) list.RemoveAt(1);
 
     ASSERT_EQ(result, m2);
+
+    delete(m1);
+    delete(m2);
 }
 
 //
@@ -380,6 +434,11 @@ TEST_F( SimplexSupportDoublyLinkedList, CustomConstructorUsesAllocatorMemoryWhen
     SIZE after = mAllocator->GetUsedMemory();
 
     ASSERT_EQ(before, after);
+
+    delete(m1);
+    delete(m2);
+    delete(m3);
+
 }
 
 //
@@ -400,4 +459,9 @@ TEST_F( SimplexSupportDoublyLinkedList, DestructorDeallocatesNodes )
     list.~DoublyLinkedList();
 
     ASSERT_EQ(mAllocator->GetAllocationCount(), 0);
+
+    delete(m1);
+    delete(m2);
+    delete(m3);
+
 }

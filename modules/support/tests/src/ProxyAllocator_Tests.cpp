@@ -12,19 +12,21 @@ class SimplexSupportProxyAllocator : public ::testing::Test {
       virtual void SetUp()
       {
         int size = 1 * 1024 * 1024; // 1MB
-        void* memory = malloc(size);
-        mLinkedListAllocator = new LinkedListAllocator(size, memory);
+        mMemory = malloc(size);
+        mLinkedListAllocator = new LinkedListAllocator(size, mMemory);
         mAllocator = new ProxyAllocator(*mLinkedListAllocator);
       };
 
       virtual void TearDown()
       {
         mAllocator->~ProxyAllocator();
-        free(mAllocator);
+        delete(mAllocator);
         mLinkedListAllocator->~LinkedListAllocator();
-        free(mLinkedListAllocator);
+        delete(mLinkedListAllocator);
+        free(mMemory);
       };
 
+      void* mMemory;
       ProxyAllocator* mAllocator;
       LinkedListAllocator* mLinkedListAllocator;
 };
