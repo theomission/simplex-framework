@@ -13,23 +13,69 @@ namespace Simplex
 {
     void Application::AllocateMemory( U32 size )
     {
-        mMemoryToAllocate = size;
-    }
-
-    void Application::Startup ()
-    {
-        StartupAllocator();
-        SetupLinkedListForSubsystems();
-
-        // Graphics::Subsystem::Instance()->Startup();
-        // Editor::Subsystem::Instance()->Startup();
-    }
-
-    void Application::StartupAllocator()
-    {
-        void* mAllocationStartAddress = malloc(mMemoryToAllocate);
-        mDefaultAllocator = new Support::LinearAllocator(mMemoryToAllocate, mAllocationStartAddress);
+        void* mAllocationStartAddress = malloc(size);
+        mDefaultAllocator = new Support::LinearAllocator(size, mAllocationStartAddress);
         Support::Globals::Instance()->Allocator = mDefaultAllocator;
+    }
+
+    void Application::Startup()
+    {
+        StartupSubsystems();
+    }
+
+    void Application::StartupSubsystems()
+    {
+        DoublyLinkedList::Node* subsystem = mSubsystems->First();
+
+        while(subsystem != nullptr)
+        {
+            ((Subsystem*)subsystem->Value)->Startup();
+            subsystem = subsystem->Next;
+        }
+    }
+    void Application::Run()
+    {   /* Loop until the user closes the window */
+        while (!Globals::Instance()->ShouldShutdown)
+        {
+            UpdateSubsystems();
+            FrameStep();
+        }
+    }
+
+    void Application::UpdateSubsystems()
+    {
+        DoublyLinkedList::Node* subsystem = mSubsystems->First();
+
+        while(subsystem != nullptr)
+        {
+            ((Subsystem*)subsystem->Value)->Update();
+            subsystem = subsystem->Next;
+        }
+    }
+
+    void Application::Shutdown()
+    {
+        ShutdownSubsystems();
+    }
+
+    void Application::ShutdownSubsystems()
+    {
+        if(mSubsystems)
+        {
+            DoublyLinkedList::Node* subsystem = mSubsystems->First();
+
+            while(subsystem != nullptr)
+            {
+                ((Subsystem*)subsystem->Value)->Shutdown();
+                subsystem = subsystem->Next;
+            }
+        }
+    }
+
+    void Application::SetSubsystemCount(U32 count)
+    {
+        mSubsystemCount = count;
+        SetupLinkedListForSubsystems();
     }
 
     void Application::SetupLinkedListForSubsystems()
@@ -38,31 +84,11 @@ namespace Simplex
         mSubsystems = new(memory) DoublyLinkedList(mSubsystemCount);
     }
 
-    void Application::Run ()
-    {   /* Loop until the user closes the window */
-        while (!Globals::Instance()->ShouldShutdown)
-        {
-            FrameStep();
 
-            // Editor::Subsystem::Instance()->Update();
-            // Graphics::Subsystem::Instance()->Update();
-        }
-    }
-
-    void Application::Shutdown ()
-    {
-        // Editor::Subsystem::Instance()->Shutdown();
-        // Graphics::Subsystem::Instance()->Shutdown();
-    }
-
-    void Application::SetSubsystemCount(U32 count)
-    {
-        mSubsystemCount = count;
-    }
 
     void Application::AddSubsystem(Support::Subsystem* subsystem)
     {
-
+        mSubsystems->PushBack(subsystem);
     }
 
 }

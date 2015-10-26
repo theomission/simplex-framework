@@ -1,6 +1,7 @@
 #include <Simplex/Testing.h>
 #include <Simplex/Application.h>
 #include <Simplex/Support/Subsystem.h>
+#include <Simplex/Support/Subsystem.h>
 using namespace Simplex;
 
 class SubsystemMock : public Simplex::Support::Subsystem
@@ -23,12 +24,18 @@ class SubsystemMock : public Simplex::Support::Subsystem
     };
 };
 
-TEST ( SimplexApplication, StartupConfiguresMemory )
+class ApplicationMock : public Simplex::Application
 {
-  Application a;
+  virtual void FrameStep() override
+  {
+    Support::Globals::Instance()->ShouldShutdown = true;
+  };
+};
+TEST ( SimplexApplication, AllocateMemoryReservesMemory )
+{
+  ApplicationMock a;
 
   a.AllocateMemory(100);
-  a.Startup();
 
   Support::Globals* globals = Simplex::Support::Globals::Instance();
 
@@ -38,26 +45,55 @@ TEST ( SimplexApplication, StartupConfiguresMemory )
 
 TEST ( SimplexApplication, SetSubsystemCountReservesMemory )
 {
-  Application a;
+  ApplicationMock a;
 
   a.AllocateMemory(1024);
 
   a.SetSubsystemCount(2);
-  a.Startup();
 
   Support::Globals* globals = Simplex::Support::Globals::Instance();
 
-  EXPECT_GT( globals->Allocator->GetUsedMemory(), 0 );
+  EXPECT_GT( globals->Allocator->GetUsedMemory(), 100 );
   a.Shutdown();
 }
-// TEST ( SimplexApplication, AddSubsystemAddsSubsystem )
-// {
-//   Application a;
-//   SubsystemMock s;
 
-//   a.AddSubsystem(&s);
+TEST ( SimplexApplication, AddSubsystemAddsSubsystemAndStartupStartsThem )
+{
+  ApplicationMock a;
+  SubsystemMock s;
 
-//   a.Startup();
+  a.AllocateMemory(1024);
+  a.SetSubsystemCount(1);
+  a.AddSubsystem(&s);
+  a.Startup();
 
-//   ASSERT_TRUE( s.FunctionCalled == "Startup" );
-// }
+  ASSERT_EQ( s.FunctionCalled, "Startup" );
+}
+
+TEST ( SimplexApplication, UpdateUpdatesSubsystems )
+{
+  ApplicationMock a;
+  SubsystemMock s;
+
+  a.AllocateMemory(1024);
+  a.SetSubsystemCount(1);
+  a.AddSubsystem(&s);
+  a.Startup();
+  a.Run();
+
+  ASSERT_EQ( s.FunctionCalled, "Update" );
+}
+
+TEST ( SimplexApplication, ShutdownShutdownsSubsystems )
+{
+  ApplicationMock a;
+  SubsystemMock s;
+
+  a.AllocateMemory(1024);
+  a.SetSubsystemCount(1);
+  a.AddSubsystem(&s);
+  a.Startup();
+  a.Shutdown();
+
+  ASSERT_EQ( s.FunctionCalled, "Shutdown" );
+}

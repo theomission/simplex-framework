@@ -22,7 +22,7 @@ namespace Simplex
         void AddSubsystem(Support::Subsystem* subsystem);
 
     protected:
-        virtual void FrameStep() {};
+        virtual void FrameStep() = 0;
 
     private:
 
@@ -30,7 +30,9 @@ namespace Simplex
         Support::Allocator* mDefaultAllocator = 0;
         void* mAllocationStartAddress;
 
-        void StartupAllocator();
+        void StartupSubsystems();
+        void UpdateSubsystems();
+        void ShutdownSubsystems();
         void SetupLinkedListForSubsystems();
 
         U32 mSubsystemCount = 1;

@@ -14,6 +14,7 @@ namespace Simplex
             void SetArguments(int argc, char **argv);
             virtual void Startup() override;
             virtual void Run() override;
+            virtual void FrameStep() override {};
             int GetTestResult();
         private:
             int mArgc;
