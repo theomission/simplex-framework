@@ -35,7 +35,7 @@ namespace Simplex
         {
             void* memory = Support::Globals::Instance()->Allocator->Allocate(sizeof(Simplex::Graphics::Adapter),alignof(Simplex::Graphics::Adapter));
             Adapter = new(memory) Graphics::Adapter();
-            Adapter->Startup(1920,1080, false);
+            Adapter->Startup(1920,1080, true);
             Initialized = true;
         }
 

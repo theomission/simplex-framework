@@ -67,7 +67,7 @@ namespace Simplex
             int display_w, display_h;
             glfwGetFramebufferSize(Window, &display_w, &display_h);
             glViewport(0, 0, display_w, display_h);
-            glClearColor(0.5, 0.5, 0.5, 1);
+            glClearColor(0.1, 0.1, 0.1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
         }
