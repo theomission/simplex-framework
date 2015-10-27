@@ -6,6 +6,8 @@
 #include <Simplex/Editor/UI/Widget.h>
 #include <GL/gl3w.h>
 
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 namespace Simplex
 {
     namespace Editor

@@ -1,0 +1,4 @@
+#ifndef SIMPLEX_EDITOR_WIDGETS_H
+#define SIMPLEX_EDITOR_WIDGETS_H
+
+#endif
