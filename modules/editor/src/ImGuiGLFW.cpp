@@ -5,6 +5,7 @@
 // https://github.com/ocornut/imgui
 
 #include <imgui.h>
+#include <Simplex/Support/Globals.h>
 #include <Simplex/Editor/UI/ImGuiGLFW.h>
 
 // GL3W/GLFW
@@ -149,6 +150,9 @@ void ImGui_ImplGlfwGL3_KeyCallback(GLFWwindow*, int key, int, int action, int mo
     io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
     io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
     io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+
+     if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS )
+        Simplex::Support::Globals::Instance()->ShouldShutdown = true;
 }
 
 void ImGui_ImplGlfwGL3_CharCallback(GLFWwindow*, unsigned int c)
