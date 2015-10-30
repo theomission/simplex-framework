@@ -41,10 +41,15 @@ namespace Simplex
             // bool show_another_window = false;
             ImGui_ImplGlfwGL3_NewFrame();
 
+            Support::Allocator* alloc = Support::Globals::Instance()->Allocator;
+             // Memory
+            ImGui::Text("Memory: %i bytes / %i bytes (%i)", alloc->GetUsedMemory(), alloc->GetSize(), alloc->GetAllocationCount() );
+
+            // FPS
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
             if(mUICallback != nullptr)
-                mUICallback();
+                (*mUICallback)(mMetadata);
 
 
             // Show Widgets
@@ -77,9 +82,10 @@ namespace Simplex
             Initialized = false;
         }
 
-        void Subsystem::SetUICallback( void (*callback)() )
+        void Subsystem::SetUICallback( void (*callback) (void*), void* metadata )
         {
             mUICallback = callback;
+            mMetadata = metadata;
         }
     }
 }

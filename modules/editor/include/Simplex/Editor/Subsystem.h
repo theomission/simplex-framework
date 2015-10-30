@@ -17,7 +17,7 @@ namespace Simplex
             virtual void Update() override;
             virtual void Shutdown() override;
 
-            void SetUICallback( void (*callback)() );
+            void SetUICallback( void (*callback) (void*), void* metadata );
 
         private:
             static Subsystem* mInstance;
@@ -25,7 +25,8 @@ namespace Simplex
 
             Support::DoublyLinkedList* mWidgets;
 
-            void (*mUICallback) () = 0;
+            void (*mUICallback) (void*) = 0;
+            void* mMetadata = 0;
 
         };
     }

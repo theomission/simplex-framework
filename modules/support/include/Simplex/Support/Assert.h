@@ -1,3 +1,6 @@
+#ifndef SIMPLEX_SUPPORT_ASSERT_H
+#define SIMPLEX_SUPPORT_ASSERT_H
+
 #include <Simplex/Support/TypeDefs.h>
 #include <execinfo.h>
 #include <iostream>
@@ -45,3 +48,5 @@ static inline void printStackTrace(U32 max_frames = 63 )
 
    free(symbollist);
 }
+
+#endif
