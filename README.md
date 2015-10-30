@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/franciscotufro/simplex-framework.svg?branch=master)](https://travis-ci.org/franciscotufro/simplex-framework)
 [![Coverage Status](https://coveralls.io/repos/franciscotufro/simplex-framework/badge.svg?branch=master&service=github)](https://coveralls.io/github/franciscotufro/simplex-framework?branch=master)
 
-Simplex Framework ought to be a set of reusable libraries and a standarized way to work with them to aid game development.
+Simplex Framework wants to be a set of reusable libraries and a standarized way to work with them to aid game development.
 
 ## Philosophy
 In the quest for expression, art and the sense of authorship, I crashed into a wall when working with generalistic game engines like Unity or UE4.
